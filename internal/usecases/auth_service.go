@@ -12,6 +12,7 @@ import (
 )
 
 var ErrInvalidCredentials = errors.New("invalid credentials")
+var ErrUserNotFound = errors.New("user not found")
 
 type AuthService struct {
 	users      repositories.UserRepository
@@ -63,7 +64,7 @@ func (s *AuthService) GetProfile(userID string) (models.User, error) {
 		return models.User{}, err
 	}
 	if !ok {
-		return models.User{}, ErrTodoNotFound
+		return models.User{}, ErrUserNotFound
 	}
 	return user, nil
 }

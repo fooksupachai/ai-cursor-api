@@ -10,7 +10,6 @@ import (
 	_ "modernc.org/sqlite"
 	"backend-service-api/internal/handlers"
 	"backend-service-api/internal/routes"
-	"backend-service-api/internal/storage/memory"
 	"backend-service-api/internal/storage/sqlite"
 	"backend-service-api/internal/usecases"
 )
@@ -21,11 +20,6 @@ func main() {
 	app.Get("/healthz", func(c *fiber.Ctx) error {
 		return c.SendString("ok")
 	})
-
-	// Wire dependencies
-	repo := memory.NewTodoMemoryRepository()
-	service := usecases.NewTodoService(repo)
-	h := handlers.NewTodoHandler(service)
 
 	// SQLite connection for users
 	dsn := os.Getenv("SQLITE_DSN")
@@ -47,7 +41,7 @@ func main() {
 	authSvc := usecases.NewAuthService(userRepo, jwtSecret, time.Hour*24)
 	authHandler := handlers.NewAuthHandler(authSvc)
 
-	routes.Register(app, h, authHandler, jwtSecret)
+	routes.Register(app, authHandler, jwtSecret)
 
 	// Optional seed user (set SEED_EMAIL and SEED_PASSWORD)
 	if seedEmail := os.Getenv("SEED_EMAIL"); seedEmail != "" {

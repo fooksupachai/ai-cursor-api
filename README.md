@@ -87,17 +87,19 @@ cmd/
   main.go
 internal/
   handlers/
-    todo_handler.go
+    auth_handler.go
+  middleware/
+    jwt_middleware.go
   models/
-    todo.go
+    user.go
   repositories/
-    todo_repository.go
+    user_repository.go
   routes/
     routes.go
   storage/
-    memory/
-      todo_memory.go
+    sqlite/
+      user_sqlite.go
   usecases/
-    todo_service.go
+    auth_service.go
 ```
 
