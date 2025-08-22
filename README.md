@@ -13,12 +13,6 @@ Flow: HTTP -> handlers -> usecases -> repositories (interface) -> storage (imple
 
 ### Endpoints (base `/api/v1`)
 - GET `/healthz`
-- GET `/api/v1/todos/`
-- POST `/api/v1/todos/` { "title": "..." }
-- GET `/api/v1/todos/:id`
-- PUT `/api/v1/todos/:id` { "title": "...", "completed": true }
-- DELETE `/api/v1/todos/:id`
-
 - POST `/api/v1/login` { "email": "...", "password": "..." }
 - GET `/api/v1/me` (Bearer token)
 - PUT `/api/v1/me` { "name": "..." } (Bearer token)
@@ -106,7 +100,4 @@ internal/
   usecases/
     todo_service.go
 ```
-
-### Notes
-- In-memory storage is ephemeral; swap with a DB by implementing `TodoRepository` and wiring in `cmd/main.go`.
 
