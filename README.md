@@ -23,6 +23,54 @@ Flow: HTTP -> handlers -> usecases -> repositories (interface) -> storage (imple
 - GET `/api/v1/me` (Bearer token)
 - PUT `/api/v1/me` { "name": "..." } (Bearer token)
 
+### Sequence diagrams (Mermaid)
+```mermaid
+sequenceDiagram
+  autonumber
+  participant C as Client
+  participant H as Fiber Handler
+  participant M as JWT Middleware
+  participant A as AuthService
+  participant U as UserRepository (SQLite)
+
+  rect rgb(245,245,245)
+    note over C,H: Login
+    C->>H: POST /api/v1/login {email,password}
+    H->>A: Login(email,password)
+    A->>U: GetByEmail(email)
+    U-->>A: User(email, passwordHash)
+    A-->>A: bcrypt compare
+    A-->>H: JWT token + profile
+    H-->>C: 200 {token,email,name}
+  end
+
+  rect rgb(245,245,245)
+    note over C,H: Get profile
+    C->>H: GET /api/v1/me (Authorization: Bearer)
+    H->>M: validate JWT
+    M-->>H: userID
+    H->>A: GetProfile(userID)
+    A->>U: GetByID(userID)
+    U-->>A: User
+    A-->>H: User
+    H-->>C: 200 {id,email,name}
+  end
+
+  rect rgb(245,245,245)
+    note over C,H: Update profile
+    C->>H: PUT /api/v1/me {name} (Bearer)
+    H->>M: validate JWT
+    M-->>H: userID
+    H->>A: UpdateProfile(userID,name)
+    A->>U: GetByID(userID)
+    U-->>A: User
+    A-->>U: Update(User{name})
+    U-->>A: Updated User
+    A-->>H: Updated User
+    H-->>C: 200 {id,email,name}
+  end
+```
+
 ### Run locally
 ```bash
 export PORT=8080
