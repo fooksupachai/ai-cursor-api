@@ -19,9 +19,15 @@ Flow: HTTP -> handlers -> usecases -> repositories (interface) -> storage (imple
 - PUT `/api/v1/todos/:id` { "title": "...", "completed": true }
 - DELETE `/api/v1/todos/:id`
 
+- POST `/api/v1/login` { "email": "...", "password": "..." }
+- GET `/api/v1/me` (Bearer token)
+- PUT `/api/v1/me` { "name": "..." } (Bearer token)
+
 ### Run locally
 ```bash
 export PORT=8080
+export SQLITE_DSN="file:app.db?cache=shared&mode=rwc"
+export JWT_SECRET="change-me"
 go mod tidy
 go run ./cmd
 ```
